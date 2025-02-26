@@ -20,6 +20,7 @@ public class WeatherService
         };
     }
 
+    // the logic related to query the temperature from the database
     private int QueryTemperature(DateTime dateTime)
     {
         return Random.Shared.Next(-20, 55);
