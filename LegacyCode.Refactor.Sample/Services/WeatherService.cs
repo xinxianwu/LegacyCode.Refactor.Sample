@@ -15,6 +15,7 @@ public class WeatherService
         {
             Date = DateOnly.FromDateTime(now),
             TemperatureC = queryTemperature,
+            TemperatureF = 32 + (int)(queryTemperature / 0.5556),
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         };
     }
