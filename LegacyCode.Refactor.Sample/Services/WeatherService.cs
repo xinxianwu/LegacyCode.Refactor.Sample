@@ -1,3 +1,6 @@
+using System.Data;
+using System.Data.SqlClient;
+
 namespace LegacyCode.Refactor.Sample.Services;
 
 public class WeatherService
@@ -9,7 +12,8 @@ public class WeatherService
 
     public WeatherForecast GetWeatherForecast(DateTime now)
     {
-        var queryTemperature = QueryTemperature(now);
+        var dataTable = QueryTemperature(now);
+        var queryTemperature = dataTable.Rows.Count > 0 ? int.Parse(dataTable.Rows[0]["Temperature"].ToString()) : 0;
 
         return new WeatherForecast
         {
@@ -21,8 +25,17 @@ public class WeatherService
     }
 
     // the logic related to query the temperature from the database
-    private int QueryTemperature(DateTime dateTime)
+    private DataTable QueryTemperature(DateTime dateTime)
     {
-        return Random.Shared.Next(-20, 55);
+        using var connection = new SqlConnection("Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;");
+        connection.Open();
+        
+        var command = new SqlCommand("SELECT * FROM WeatherForecast WHERE Date = @Date", connection);
+        command.Parameters.AddWithValue("@Date", dateTime);
+        var adapter = new SqlDataAdapter(command);
+        var dataTable = new DataTable();
+        
+        adapter.Fill(dataTable);
+        return dataTable;
     }
 }
