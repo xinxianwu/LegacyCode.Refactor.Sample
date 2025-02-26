@@ -30,7 +30,7 @@ public class WeatherService
         using var connection = new SqlConnection("Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;");
         connection.Open();
         
-        var command = new SqlCommand("SELECT * FROM WeatherForecast WHERE Date = @Date", connection);
+        var command = new SqlCommand("SELECT Temperature FROM WeatherForecast WHERE Date = @Date", connection);
         command.Parameters.AddWithValue("@Date", dateTime);
         var adapter = new SqlDataAdapter(command);
         var dataTable = new DataTable();
